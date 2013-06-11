@@ -1,0 +1,27 @@
+NAME="pal"
+VERSION=0.4.3
+RELEASE=1
+CATEGORY="Utils"
+SUMMARY="Console calendar program"
+DESCRIPTION="pal is a command-line calendar program for Unix/Linux systems that
+can keep track of events. It has similarities with the Unix cal command, the
+more complex GNU gcal program, and the calendar program distributed with the
+BSDs."
+HOMEPAGE="http://palcal.sourceforge.net/"
+SRC_URI="mirror://sourceforge/palcal/pal-${VERSION}.tgz"
+PATCH_URI="0.4.3-install.patch"
+
+src_compile() {
+	lndirs
+	cd ${B}
+	cygmake -j1 \
+		DEBUG=1 \
+		CC=${CC} \
+		CFLAGS="${CFLAGS} -DG_CONST_RETURN=const -I/usr/include/ncurses"
+}
+
+src_install() {
+	cd ${B}/src
+	cygmake -j1 install-no-rm DESTDIR=${D}
+	mv ${D}/usr/share/doc/pal{-${VERSION},}
+}
